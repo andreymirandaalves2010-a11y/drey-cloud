@@ -6,10 +6,22 @@ const { pool } = require("../db");
 
 const router = express.Router();
 
+// ==========================================
+// CONFIGURAÇÃO DO COOKIE
+// ==========================================
 
-// =====================================================
+const isProduction = process.env.NODE_ENV === "production";
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
+  maxAge: 7 * 24 * 60 * 60 * 1000
+};
+
+// ==========================================
 // CADASTRO
-// =====================================================
+// ==========================================
 
 router.post("/register", async (req, res) => {
   try {
@@ -25,38 +37,72 @@ router.post("/register", async (req, res) => {
     if (password.length < 6) {
       return res.status(400).json({
         success: false,
-        message: "A senha precisa ter pelo menos 6 caracteres."
+        message: "A senha deve ter pelo menos 6 caracteres."
       });
     }
 
+    const normalizedName = name.trim();
     const normalizedEmail = email.trim().toLowerCase();
 
-    const [existing] = await pool.query(
+    if (!normalizedName) {
+      return res.status(400).json({
+        success: false,
+        message: "O nome é obrigatório."
+      });
+    }
+
+    // ========================================
+    // VERIFICAR EMAIL
+    // ========================================
+
+    const [existingUsers] = await pool.query(
       "SELECT id FROM users WHERE email = ? LIMIT 1",
       [normalizedEmail]
     );
 
-    if (existing.length > 0) {
+    if (existingUsers.length > 0) {
       return res.status(409).json({
         success: false,
         message: "Este email já está cadastrado."
       });
     }
 
-    const passwordHash = await bcrypt.hash(password, 12);
+    // ========================================
+    // CRIAR HASH DA SENHA
+    // ========================================
+
+    const passwordHash = await bcrypt.hash(
+      password,
+      12
+    );
+
+    // ========================================
+    // CRIAR USUÁRIO
+    // ========================================
 
     const [result] = await pool.query(
-      `
-      INSERT INTO users
-      (name, email, password_hash, role)
-      VALUES (?, ?, ?, 'USER')
-      `,
+      `INSERT INTO users
+      (
+        name,
+        email,
+        password_hash,
+        role,
+        hours_played,
+        games_played,
+        achievements,
+        rating
+      )
+      VALUES (?, ?, ?, 'USER', 0, 0, 0, 0.0)`,
       [
-        name.trim(),
+        normalizedName,
         normalizedEmail,
         passwordHash
       ]
     );
+
+    // ========================================
+    // GERAR JWT
+    // ========================================
 
     const token = jwt.sign(
       {
@@ -70,27 +116,40 @@ router.post("/register", async (req, res) => {
       }
     );
 
-    res.cookie("drey_cloud_token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    });
+    // ========================================
+    // COOKIE
+    // ========================================
+
+    res.cookie(
+      "drey_cloud_token",
+      token,
+      cookieOptions
+    );
+
+    // ========================================
+    // RESPOSTA
+    // ========================================
 
     return res.status(201).json({
       success: true,
-      message: "Conta criada com sucesso!",
+      message: "Conta criada com sucesso.",
       user: {
         id: result.insertId,
-        name: name.trim(),
+        name: normalizedName,
         email: normalizedEmail,
-        role: "USER"
+        role: "USER",
+        hours_played: 0,
+        games_played: 0,
+        achievements: 0,
+        rating: 0
       }
     });
 
   } catch (error) {
-    console.error("❌ ERRO NO CADASTRO:");
-    console.error(error);
+    console.error(
+      "ERRO NO CADASTRO:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -99,10 +158,9 @@ router.post("/register", async (req, res) => {
   }
 });
 
-
-// =====================================================
+// ==========================================
 // LOGIN
-// =====================================================
+// ==========================================
 
 router.post("/login", async (req, res) => {
   try {
@@ -115,20 +173,28 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedEmail = email
+      .trim()
+      .toLowerCase();
+
+    // ========================================
+    // BUSCAR USUÁRIO
+    // ========================================
 
     const [users] = await pool.query(
-      `
-      SELECT
+      `SELECT
         id,
         name,
         email,
         password_hash,
-        role
+        role,
+        hours_played,
+        games_played,
+        achievements,
+        rating
       FROM users
       WHERE email = ?
-      LIMIT 1
-      `,
+      LIMIT 1`,
       [normalizedEmail]
     );
 
@@ -141,10 +207,15 @@ router.post("/login", async (req, res) => {
 
     const user = users[0];
 
-    const passwordCorrect = await bcrypt.compare(
-      password,
-      user.password_hash
-    );
+    // ========================================
+    // VERIFICAR SENHA
+    // ========================================
+
+    const passwordCorrect =
+      await bcrypt.compare(
+        password,
+        user.password_hash
+      );
 
     if (!passwordCorrect) {
       return res.status(401).json({
@@ -152,6 +223,10 @@ router.post("/login", async (req, res) => {
         message: "Email ou senha incorretos."
       });
     }
+
+    // ========================================
+    // GERAR JWT
+    // ========================================
 
     const token = jwt.sign(
       {
@@ -165,27 +240,48 @@ router.post("/login", async (req, res) => {
       }
     );
 
-    res.cookie("drey_cloud_token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    });
+    // ========================================
+    // COOKIE
+    // ========================================
+
+    res.cookie(
+      "drey_cloud_token",
+      token,
+      cookieOptions
+    );
+
+    // ========================================
+    // RESPOSTA
+    // ========================================
 
     return res.json({
       success: true,
-      message: "Login realizado com sucesso!",
+      message: "Login realizado com sucesso.",
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        hours_played: Number(
+          user.hours_played || 0
+        ),
+        games_played: Number(
+          user.games_played || 0
+        ),
+        achievements: Number(
+          user.achievements || 0
+        ),
+        rating: Number(
+          user.rating || 0
+        )
       }
     });
 
   } catch (error) {
-    console.error("❌ ERRO NO LOGIN:");
-    console.error(error);
+    console.error(
+      "ERRO NO LOGIN:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -194,13 +290,14 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// =====================================================
+// ==========================================
 // USUÁRIO LOGADO
-// =====================================================
+// ==========================================
 
 router.get("/me", async (req, res) => {
   try {
-    const token = req.cookies.drey_cloud_token;
+    const token =
+      req.cookies?.drey_cloud_token;
 
     if (!token) {
       return res.status(401).json({
@@ -209,10 +306,18 @@ router.get("/me", async (req, res) => {
       });
     }
 
+    // ========================================
+    // VALIDAR JWT
+    // ========================================
+
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET
     );
+
+    // ========================================
+    // BUSCAR USUÁRIO ATUALIZADO
+    // ========================================
 
     const [users] = await pool.query(
       `SELECT
@@ -225,9 +330,9 @@ router.get("/me", async (req, res) => {
         achievements,
         rating,
         created_at
-       FROM users
-       WHERE id = ?
-       LIMIT 1`,
+      FROM users
+      WHERE id = ?
+      LIMIT 1`,
       [decoded.id]
     );
 
@@ -240,6 +345,10 @@ router.get("/me", async (req, res) => {
 
     const user = users[0];
 
+    // ========================================
+    // RESPOSTA
+    // ========================================
+
     return res.json({
       success: true,
       user: {
@@ -247,16 +356,27 @@ router.get("/me", async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        hours_played: Number(user.hours_played || 0),
-        games_played: Number(user.games_played || 0),
-        achievements: Number(user.achievements || 0),
-        rating: Number(user.rating || 0),
+        hours_played: Number(
+          user.hours_played || 0
+        ),
+        games_played: Number(
+          user.games_played || 0
+        ),
+        achievements: Number(
+          user.achievements || 0
+        ),
+        rating: Number(
+          user.rating || 0
+        ),
         created_at: user.created_at
       }
     });
 
   } catch (error) {
-    console.error("ERRO /api/auth/me:", error);
+    console.error(
+      "ERRO /ME:",
+      error.message
+    );
 
     return res.status(401).json({
       success: false,
@@ -264,5 +384,31 @@ router.get("/me", async (req, res) => {
     });
   }
 });
+
+// ==========================================
+// LOGOUT
+// ==========================================
+
+router.post("/logout", (req, res) => {
+  res.clearCookie(
+    "drey_cloud_token",
+    {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction
+        ? "none"
+        : "lax"
+    }
+  );
+
+  return res.json({
+    success: true,
+    message: "Logout realizado com sucesso."
+  });
+});
+
+// ==========================================
+// EXPORTAÇÃO
+// ==========================================
 
 module.exports = router;
