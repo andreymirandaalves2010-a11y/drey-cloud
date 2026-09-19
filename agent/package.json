@@ -1,0 +1,17 @@
+{
+  "name": "drey-cloud-agent",
+  "version": "1.0.0",
+  "description": "Agent for Drey Cloud Gaming Platform running on Windows",
+  "main": "src/agent.js",
+  "scripts": {
+    "start": "node src/agent.js",
+    "dev": "node src/agent.js"
+  },
+  "keywords": ["cloud", "gaming", "agent", "windows"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "1.6.0",
+    "dotenv": "16.3.1"
+  }
+}

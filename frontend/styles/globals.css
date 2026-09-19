@@ -1,0 +1,3062 @@
+/* =====================================================
+   DREY CLOUD
+   DESIGN SYSTEM
+   DARK / CYAN / GAMING
+===================================================== */
+
+:root {
+  --bg: #05070a;
+  --bg-dark: #070a0e;
+  --bg-card: #0b1118;
+  --bg-card-2: #0e161e;
+
+  --cyan: #00e5ff;
+  --cyan-light: #5ff3ff;
+  --cyan-dark: #00a8c2;
+
+  --white: #f5f7fa;
+  --text: #c7d0d9;
+  --muted: #758290;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-cyan: rgba(0, 229, 255, 0.25);
+
+  --shadow:
+    0 25px 80px rgba(0, 0, 0, 0.5);
+
+  --glow:
+    0 0 40px rgba(0, 229, 255, 0.12);
+
+  --radius: 22px;
+
+  --transition:
+    300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--white);
+
+  font-family:
+    Inter,
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+
+/* =====================================================
+   SCROLLBAR
+===================================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #030507;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 229, 255, 0.2);
+  border-radius: 50px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cyan);
+}
+
+
+/* =====================================================
+   SELECTION
+===================================================== */
+
+::selection {
+  background: rgba(0, 229, 255, 0.25);
+  color: white;
+}
+
+
+/* =====================================================
+   PAGE
+===================================================== */
+
+.drey-page {
+  min-height: 100vh;
+
+  background:
+    radial-gradient(
+      circle at 80% 5%,
+      rgba(0, 229, 255, 0.08),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 10% 70%,
+      rgba(0, 229, 255, 0.025),
+      transparent 25%
+    ),
+    var(--bg);
+
+  position: relative;
+}
+
+
+/* =====================================================
+   GRID BACKGROUND
+===================================================== */
+
+.drey-page::before {
+  content: "";
+
+  position: fixed;
+
+  inset: 0;
+
+  pointer-events: none;
+
+  z-index: 0;
+
+  opacity: 0.025;
+
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.5) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.5) 1px,
+      transparent 1px
+    );
+
+  background-size: 50px 50px;
+
+  mask-image:
+    linear-gradient(
+      to bottom,
+      black,
+      transparent
+    );
+}
+
+
+/* =====================================================
+   CONTAINER
+===================================================== */
+
+.drey-container {
+  width: min(
+    1180px,
+    calc(100% - 48px)
+  );
+
+  margin: 0 auto;
+
+  position: relative;
+
+  z-index: 2;
+}
+
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.drey-navbar {
+  height: 82px;
+
+  position: sticky;
+
+  top: 0;
+
+  z-index: 100;
+
+  background:
+    rgba(5, 7, 10, 0.82);
+
+  border-bottom:
+    1px solid
+    rgba(255, 255, 255, 0.06);
+
+  backdrop-filter:
+    blur(18px);
+
+  -webkit-backdrop-filter:
+    blur(18px);
+
+  animation:
+    navbarEnter 0.6s ease both;
+}
+
+
+.drey-nav-content {
+  height: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 30px;
+}
+
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.drey-logo {
+  font-size: 23px;
+
+  font-weight: 950;
+
+  letter-spacing: -0.05em;
+
+  color: white;
+
+  transition:
+    transform var(--transition);
+}
+
+.drey-logo span {
+  color: var(--cyan);
+
+  text-shadow:
+    0 0 20px
+    rgba(0, 229, 255, 0.4);
+}
+
+.drey-logo:hover {
+  transform: translateY(-2px);
+}
+
+
+/* =====================================================
+   NAV LINKS
+===================================================== */
+
+.drey-nav-links {
+  display: flex;
+
+  align-items: center;
+
+  gap: 34px;
+}
+
+.drey-nav-links a {
+  color: var(--muted);
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  position: relative;
+
+  transition:
+    color var(--transition);
+}
+
+.drey-nav-links a::after {
+  content: "";
+
+  position: absolute;
+
+  left: 50%;
+  bottom: -9px;
+
+  width: 0;
+  height: 2px;
+
+  background: var(--cyan);
+
+  transform: translateX(-50%);
+
+  transition:
+    width var(--transition);
+}
+
+.drey-nav-links a:hover {
+  color: white;
+}
+
+.drey-nav-links a:hover::after {
+  width: 20px;
+}
+
+
+/* =====================================================
+   NAV ACTIONS
+===================================================== */
+
+.drey-nav-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.drey-btn {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 9px;
+
+  border-radius: 12px;
+
+  padding:
+    11px 17px;
+
+  font-size: 14px;
+
+  font-weight: 750;
+
+  cursor: pointer;
+
+  transition:
+    transform var(--transition),
+    background var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+.drey-btn:hover {
+  transform: translateY(-3px);
+}
+
+
+.drey-btn-primary {
+  background: var(--cyan);
+
+  color: #031014;
+
+  box-shadow:
+    0 0 0 rgba(0, 229, 255, 0);
+}
+
+.drey-btn-primary:hover {
+  background: var(--cyan-light);
+
+  box-shadow:
+    0 12px 35px
+    rgba(0, 229, 255, 0.2);
+}
+
+
+.drey-btn-outline {
+  border:
+    1px solid
+    var(--border);
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  color: var(--white);
+}
+
+.drey-btn-outline:hover {
+  border-color:
+    var(--border-cyan);
+
+  color: var(--cyan);
+
+  background:
+    rgba(0, 229, 255, 0.05);
+}
+
+
+.drey-btn-large {
+  min-height: 54px;
+
+  padding:
+    0 23px;
+
+  font-size: 15px;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.drey-hero {
+  min-height:
+    calc(100vh - 82px);
+
+  display: flex;
+
+  align-items: center;
+
+  position: relative;
+
+  overflow: hidden;
+
+  padding:
+    90px 0;
+}
+
+
+.drey-hero-glow {
+  position: absolute;
+
+  width: 650px;
+  height: 650px;
+
+  top: -250px;
+  right: -100px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(0, 229, 255, 0.08);
+
+  filter: blur(130px);
+
+  animation:
+    glowFloat 8s ease-in-out infinite alternate;
+}
+
+
+/* =====================================================
+   HERO GRID
+===================================================== */
+
+.drey-hero-grid {
+  display: grid;
+
+  grid-template-columns:
+    1.05fr 0.95fr;
+
+  align-items: center;
+
+  gap: 80px;
+}
+
+
+/* =====================================================
+   HERO CONTENT
+===================================================== */
+
+.drey-hero-content {
+  animation:
+    heroText 0.8s
+    cubic-bezier(0.16, 1, 0.3, 1)
+    both;
+}
+
+
+/* =====================================================
+   BADGE
+===================================================== */
+
+.drey-badge {
+  width: fit-content;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  margin-bottom: 25px;
+
+  padding:
+    8px 13px;
+
+  border:
+    1px solid
+    rgba(0, 229, 255, 0.18);
+
+  border-radius: 100px;
+
+  background:
+    rgba(0, 229, 255, 0.045);
+
+  color: var(--cyan);
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.12em;
+}
+
+
+.drey-status-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: var(--cyan);
+
+  box-shadow:
+    0 0 12px
+    rgba(0, 229, 255, 0.8);
+
+  animation:
+    pulseDot 1.8s infinite;
+}
+
+
+/* =====================================================
+   HERO TITLE
+===================================================== */
+
+.drey-hero h1 {
+  max-width: 700px;
+
+  font-size:
+    clamp(
+      54px,
+      7vw,
+      88px
+    );
+
+  line-height:
+    0.93;
+
+  letter-spacing:
+    -0.065em;
+
+  font-weight: 950;
+
+  color: white;
+}
+
+.drey-hero h1 span {
+  color: var(--cyan);
+
+  text-shadow:
+    0 0 45px
+    rgba(0, 229, 255, 0.17);
+}
+
+
+/* =====================================================
+   HERO TEXT
+===================================================== */
+
+.drey-hero-content > p {
+  max-width: 610px;
+
+  margin-top: 30px;
+
+  color: var(--muted);
+
+  font-size: 17px;
+
+  line-height: 1.8;
+}
+
+
+/* =====================================================
+   HERO BUTTONS
+===================================================== */
+
+.drey-hero-buttons {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-top: 35px;
+}
+
+
+/* =====================================================
+   HERO STATS
+===================================================== */
+
+.drey-hero-stats {
+  display: flex;
+
+  gap: 40px;
+
+  margin-top: 48px;
+
+  padding-top: 25px;
+
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.06);
+}
+
+.drey-hero-stats div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+.drey-hero-stats strong {
+  font-size: 18px;
+
+  color: white;
+}
+
+.drey-hero-stats span {
+  color: var(--muted);
+
+  font-size: 11px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.08em;
+}
+
+
+/* =====================================================
+   CONSOLE
+===================================================== */
+
+.drey-console-wrapper {
+  animation:
+    consoleEnter 0.9s
+    0.15s
+    cubic-bezier(0.16, 1, 0.3, 1)
+    both;
+}
+
+
+.drey-console-card {
+  padding: 14px;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.1);
+
+  border-radius: 26px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #101820,
+      #070a0e
+    );
+
+  box-shadow:
+    0 40px 100px
+    rgba(0, 0, 0, 0.55),
+    0 0 60px
+    rgba(0, 229, 255, 0.05);
+
+  transform:
+    perspective(1200px)
+    rotateY(-3deg)
+    rotateX(2deg);
+
+  transition:
+    transform 600ms
+    cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.drey-console-card:hover {
+  transform:
+    perspective(1200px)
+    rotateY(0)
+    rotateX(0)
+    translateY(-8px);
+
+  box-shadow:
+    0 50px 110px
+    rgba(0, 0, 0, 0.6),
+    0 0 70px
+    rgba(0, 229, 255, 0.08);
+}
+
+
+/* =====================================================
+   CONSOLE TOP
+===================================================== */
+
+.drey-console-top {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding:
+    12px 10px 15px;
+}
+
+
+.drey-online {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  color: var(--cyan);
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.12em;
+}
+
+.drey-online span {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: var(--cyan);
+
+  box-shadow:
+    0 0 12px
+    var(--cyan);
+
+  animation:
+    pulseDot 1.5s infinite;
+}
+
+.drey-latency {
+  color: var(--muted);
+
+  font-size: 11px;
+}
+
+
+/* =====================================================
+   GAME SCREEN
+===================================================== */
+
+.drey-game-screen {
+  height: 390px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  border-radius: 18px;
+
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(0, 229, 255, 0.16),
+      transparent 35%
+    ),
+    linear-gradient(
+      135deg,
+      #04242b,
+      #10151a 55%,
+      #020304
+    );
+}
+
+
+.drey-screen-grid {
+  position: absolute;
+
+  inset: 0;
+
+  opacity: 0.2;
+
+  background-image:
+    linear-gradient(
+      rgba(0, 229, 255, 0.12) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0, 229, 255, 0.12) 1px,
+      transparent 1px
+    );
+
+  background-size:
+    45px 45px;
+
+  mask-image:
+    radial-gradient(
+      circle,
+      black,
+      transparent 75%
+    );
+
+  animation:
+    gridMove 12s
+    linear
+    infinite;
+}
+
+
+.drey-screen-content {
+  position: absolute;
+
+  inset: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+
+.drey-play-button {
+  width: 82px;
+  height: 82px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding-left: 4px;
+
+  border:
+    1px solid
+    rgba(0, 229, 255, 0.7);
+
+  border-radius: 50%;
+
+  color: var(--cyan);
+
+  font-size: 25px;
+
+  background:
+    rgba(0, 229, 255, 0.035);
+
+  box-shadow:
+    0 0 45px
+    rgba(0, 229, 255, 0.15);
+
+  animation:
+    playPulse 3s
+    ease-in-out
+    infinite;
+
+  transition:
+    transform var(--transition);
+}
+
+.drey-play-button:hover {
+  transform:
+    scale(1.08);
+}
+
+
+.drey-screen-content > span {
+  color: white;
+
+  font-size: 18px;
+
+  font-weight: 850;
+
+  letter-spacing: 0.12em;
+}
+
+.drey-screen-content small {
+  color: var(--muted);
+
+  font-size: 11px;
+}
+
+
+/* =====================================================
+   CONSOLE BOTTOM
+===================================================== */
+
+.drey-console-bottom {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding:
+    18px 10px 8px;
+}
+
+
+.drey-console-bottom div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+.drey-console-bottom strong {
+  font-size: 14px;
+}
+
+.drey-console-bottom span {
+  color: var(--muted);
+
+  font-size: 11px;
+}
+
+
+.drey-play-link {
+  padding:
+    10px 17px;
+
+  border-radius: 10px;
+
+  background: var(--cyan);
+
+  color: #031014;
+
+  font-size: 11px;
+
+  font-weight: 900;
+
+  transition:
+    all var(--transition);
+}
+
+.drey-play-link:hover {
+  background: var(--cyan-light);
+
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 8px 25px
+    rgba(0, 229, 255, 0.2);
+}
+
+
+/* =====================================================
+   SECTIONS
+===================================================== */
+
+.drey-section {
+  position: relative;
+
+  padding:
+    125px 0;
+
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.055);
+}
+
+
+.drey-section-dark {
+  background:
+    rgba(255, 255, 255, 0.012);
+}
+
+
+/* =====================================================
+   SECTION HEADER
+===================================================== */
+
+.drey-section-header {
+  max-width: 760px;
+}
+
+.drey-section-header.drey-center {
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+
+.drey-section-label {
+  display: inline-block;
+
+  color: var(--cyan);
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.25em;
+}
+
+
+.drey-section-header h2 {
+  margin-top: 17px;
+
+  color: white;
+
+  font-size:
+    clamp(
+      38px,
+      5vw,
+      62px
+    );
+
+  line-height: 1;
+
+  letter-spacing: -0.055em;
+
+  font-weight: 950;
+}
+
+.drey-section-header h2 span {
+  color: var(--cyan);
+}
+
+
+.drey-section-header p {
+  max-width: 650px;
+
+  margin-top: 22px;
+
+  color: var(--muted);
+
+  font-size: 15px;
+
+  line-height: 1.8;
+}
+
+
+/* =====================================================
+   STEPS
+===================================================== */
+
+.drey-steps {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 18px;
+
+  margin-top: 65px;
+}
+
+
+/* =====================================================
+   STEP CARD
+===================================================== */
+
+.drey-step-card {
+  min-height: 310px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  padding: 27px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:
+    var(--radius);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(15, 23, 31, 0.85),
+      rgba(7, 10, 14, 0.9)
+    );
+
+  transition:
+    transform var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+.drey-step-card:hover {
+  transform:
+    translateY(-9px);
+
+  border-color:
+    var(--border-cyan);
+
+  box-shadow:
+    0 25px 60px
+    rgba(0, 0, 0, 0.4),
+    0 0 35px
+    rgba(0, 229, 255, 0.045);
+}
+
+
+.drey-card-top {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+}
+
+
+.drey-card-number {
+  color: var(--cyan);
+
+  font-size: 11px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.1em;
+}
+
+
+.drey-card-icon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border:
+    1px solid
+    rgba(0, 229, 255, 0.12);
+
+  border-radius: 13px;
+
+  background:
+    rgba(0, 229, 255, 0.04);
+
+  font-size: 21px;
+
+  transition:
+    transform var(--transition);
+}
+
+.drey-step-card:hover
+.drey-card-icon {
+  transform:
+    rotate(-5deg)
+    scale(1.08);
+}
+
+
+.drey-card-line {
+  width: 35px;
+  height: 2px;
+
+  margin-top: 50px;
+
+  background: var(--cyan);
+
+  box-shadow:
+    0 0 12px
+    rgba(0, 229, 255, 0.35);
+}
+
+
+.drey-step-card h3 {
+  margin-top: 20px;
+
+  color: white;
+
+  font-size: 20px;
+
+  font-weight: 850;
+}
+
+
+.drey-step-card p {
+  margin-top: 10px;
+
+  color: var(--muted);
+
+  font-size: 13px;
+
+  line-height: 1.8;
+}
+
+
+.drey-card-arrow {
+  position: absolute;
+
+  right: 27px;
+  bottom: 23px;
+
+  color:
+    rgba(0, 229, 255, 0.4);
+
+  font-size: 20px;
+
+  transition:
+    transform var(--transition),
+    color var(--transition);
+}
+
+.drey-step-card:hover
+.drey-card-arrow {
+  color: var(--cyan);
+
+  transform:
+    translateX(5px);
+}
+
+
+/* =====================================================
+   FEATURES
+===================================================== */
+
+.drey-features {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 17px;
+
+  margin-top: 65px;
+}
+
+
+.drey-feature-card {
+  min-height: 240px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  padding: 25px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:
+    var(--radius);
+
+  background:
+    rgba(10, 15, 20, 0.7);
+
+  transition:
+    all var(--transition);
+}
+
+.drey-feature-card:hover {
+  transform:
+    translateY(-7px);
+
+  border-color:
+    var(--border-cyan);
+
+  background:
+    rgba(13, 22, 29, 0.9);
+
+  box-shadow:
+    0 25px 50px
+    rgba(0, 0, 0, 0.35);
+}
+
+
+.drey-feature-icon {
+  width: 50px;
+  height: 50px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border:
+    1px solid
+    rgba(0, 229, 255, 0.12);
+
+  border-radius: 14px;
+
+  background:
+    rgba(0, 229, 255, 0.04);
+
+  font-size: 22px;
+
+  transition:
+    transform var(--transition);
+}
+
+.drey-feature-card:hover
+.drey-feature-icon {
+  transform:
+    scale(1.08)
+    rotate(-4deg);
+}
+
+
+.drey-feature-card h3 {
+  margin-top: 25px;
+
+  color: white;
+
+  font-size: 17px;
+
+  font-weight: 800;
+}
+
+
+.drey-feature-card p {
+  margin-top: 9px;
+
+  color: var(--muted);
+
+  font-size: 13px;
+
+  line-height: 1.7;
+}
+
+
+.drey-feature-line {
+  position: absolute;
+
+  left: 25px;
+  bottom: 23px;
+
+  width: 25px;
+  height: 2px;
+
+  background: var(--cyan);
+
+  opacity: 0.35;
+
+  transition:
+    width var(--transition),
+    opacity var(--transition);
+}
+
+.drey-feature-card:hover
+.drey-feature-line {
+  width: 55px;
+
+  opacity: 1;
+}
+
+
+/* =====================================================
+   CTA
+===================================================== */
+
+.drey-cta-section {
+  padding:
+    100px 0;
+}
+
+
+.drey-cta {
+  position: relative;
+
+  overflow: hidden;
+
+  padding:
+    80px 30px;
+
+  text-align: center;
+
+  border:
+    1px solid
+    rgba(0, 229, 255, 0.18);
+
+  border-radius: 30px;
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(0, 229, 255, 0.12),
+      transparent 55%
+    ),
+    rgba(0, 229, 255, 0.025);
+
+  box-shadow:
+    0 30px 80px
+    rgba(0, 0, 0, 0.3);
+}
+
+
+.drey-cta h2 {
+  position: relative;
+
+  margin-top: 17px;
+
+  font-size:
+    clamp(
+      38px,
+      5vw,
+      62px
+    );
+
+  line-height: 1;
+
+  letter-spacing: -0.05em;
+
+  font-weight: 950;
+}
+
+.drey-cta h2 span {
+  color: var(--cyan);
+}
+
+
+.drey-cta p {
+  position: relative;
+
+  margin:
+    20px auto 0;
+
+  color: var(--muted);
+
+  font-size: 15px;
+}
+
+
+.drey-cta .drey-btn {
+  position: relative;
+
+  margin-top: 32px;
+}
+
+
+.drey-cta-glow {
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  left: 50%;
+  top: -220px;
+
+  transform:
+    translateX(-50%);
+
+  border-radius: 50%;
+
+  background:
+    rgba(0, 229, 255, 0.13);
+
+  filter: blur(70px);
+
+  pointer-events: none;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.drey-footer {
+  position: relative;
+
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.06);
+
+  padding-top: 60px;
+
+  background:
+    #040609;
+}
+
+
+.drey-footer-content {
+  display: grid;
+
+  grid-template-columns:
+    2fr 1fr 1fr 1fr;
+
+  gap: 40px;
+
+  padding-bottom: 60px;
+}
+
+
+.drey-footer-brand p {
+  max-width: 240px;
+
+  margin-top: 15px;
+
+  color: var(--muted);
+
+  font-size: 13px;
+
+  line-height: 1.7;
+}
+
+
+.drey-footer-column {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+
+.drey-footer-column h3 {
+  margin-bottom: 5px;
+
+  color: white;
+
+  font-size: 12px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.1em;
+}
+
+
+.drey-footer-column a {
+  width: fit-content;
+
+  color: var(--muted);
+
+  font-size: 13px;
+
+  transition:
+    color var(--transition),
+    transform var(--transition);
+}
+
+.drey-footer-column a:hover {
+  color: var(--cyan);
+
+  transform:
+    translateX(3px);
+}
+
+
+/* =====================================================
+   FOOTER BOTTOM
+===================================================== */
+
+.drey-footer-bottom {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding:
+    22px 0;
+
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.05);
+
+  color:
+    #4f5a65;
+
+  font-size: 11px;
+}
+
+
+/* =====================================================
+   ANIMAÇÕES
+===================================================== */
+
+@keyframes navbarEnter {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(-15px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+}
+
+
+@keyframes heroText {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(35px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+}
+
+
+@keyframes consoleEnter {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(40px)
+      scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+@keyframes glowFloat {
+  from {
+    transform:
+      translate(
+        0,
+        0
+      )
+      scale(1);
+  }
+
+  to {
+    transform:
+      translate(
+        -50px,
+        40px
+      )
+      scale(1.15);
+  }
+}
+
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    opacity: 1;
+
+    box-shadow:
+      0 0 12px
+      rgba(0, 229, 255, 0.8);
+  }
+
+  50% {
+    opacity: 0.45;
+
+    box-shadow:
+      0 0 4px
+      rgba(0, 229, 255, 0.3);
+  }
+}
+
+
+@keyframes playPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 25px
+      rgba(0, 229, 255, 0.1);
+  }
+
+  50% {
+    box-shadow:
+      0 0 55px
+      rgba(0, 229, 255, 0.22);
+  }
+}
+
+
+@keyframes gridMove {
+  from {
+    transform:
+      translateY(0);
+  }
+
+  to {
+    transform:
+      translateY(45px);
+  }
+}
+
+
+/* =====================================================
+   RESPONSIVO — TABLET
+===================================================== */
+
+@media (max-width: 950px) {
+
+  .drey-hero {
+    padding:
+      75px 0;
+  }
+
+  .drey-hero-grid {
+    grid-template-columns:
+      1fr;
+
+    gap: 60px;
+  }
+
+  .drey-hero-content {
+    max-width: 700px;
+
+    margin: 0 auto;
+
+    text-align: center;
+  }
+
+  .drey-badge {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .drey-hero-buttons {
+    justify-content: center;
+  }
+
+  .drey-hero-stats {
+    justify-content: center;
+  }
+
+  .drey-console-wrapper {
+    max-width: 650px;
+
+    width: 100%;
+
+    margin: 0 auto;
+  }
+
+  .drey-steps {
+    grid-template-columns:
+      1fr;
+  }
+
+  .drey-features {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .drey-footer-content {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+}
+
+
+/* =====================================================
+   RESPONSIVO — MOBILE
+===================================================== */
+
+@media (max-width: 700px) {
+
+  .drey-container {
+    width:
+      calc(100% - 32px);
+  }
+
+
+  /* NAV */
+
+  .drey-navbar {
+    height: auto;
+
+    padding:
+      17px 0;
+  }
+
+  .drey-nav-content {
+    flex-wrap: wrap;
+
+    gap: 15px;
+  }
+
+  .drey-nav-links {
+    order: 3;
+
+    width: 100%;
+
+    justify-content: center;
+
+    gap: 22px;
+
+    padding-top: 8px;
+  }
+
+  .drey-nav-actions {
+    margin-left: auto;
+  }
+
+  .drey-nav-actions
+  .drey-btn-outline {
+    display: none;
+  }
+
+
+  /* HERO */
+
+  .drey-hero {
+    min-height: auto;
+
+    padding:
+      70px 0;
+  }
+
+  .drey-hero h1 {
+    font-size:
+      clamp(
+        46px,
+        15vw,
+        70px
+      );
+  }
+
+  .drey-hero-content > p {
+    font-size: 15px;
+
+    line-height: 1.7;
+  }
+
+  .drey-hero-buttons {
+    flex-direction: column;
+
+    width: 100%;
+  }
+
+  .drey-hero-buttons
+  .drey-btn {
+    width: 100%;
+  }
+
+  .drey-hero-stats {
+    gap: 20px;
+
+    justify-content:
+      space-between;
+  }
+
+  .drey-hero-stats strong {
+    font-size: 15px;
+  }
+
+  .drey-hero-stats span {
+    font-size: 9px;
+  }
+
+
+  /* CONSOLE */
+
+  .drey-console-card {
+    transform: none;
+  }
+
+  .drey-console-card:hover {
+    transform:
+      translateY(-5px);
+  }
+
+  .drey-game-screen {
+    height: 300px;
+  }
+
+
+  /* SECTIONS */
+
+  .drey-section {
+    padding:
+      85px 0;
+  }
+
+  .drey-section-header h2 {
+    font-size:
+      40px;
+  }
+
+  .drey-section-header p {
+    font-size: 14px;
+  }
+
+
+  /* FEATURES */
+
+  .drey-features {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  /* CTA */
+
+  .drey-cta-section {
+    padding:
+      70px 0;
+  }
+
+  .drey-cta {
+    padding:
+      60px 20px;
+  }
+
+  .drey-cta h2 {
+    font-size:
+      40px;
+  }
+
+
+  /* FOOTER */
+
+  .drey-footer-content {
+    grid-template-columns:
+      1fr 1fr;
+
+    gap: 35px;
+  }
+
+  .drey-footer-brand {
+    grid-column:
+      1 / -1;
+  }
+
+  .drey-footer-bottom {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+}
+
+
+/* =====================================================
+   ALERTS
+===================================================== */
+
+.drey-alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 20px;
+  border: 1px solid;
+}
+
+.drey-alert-error {
+  background: rgba(220, 20, 20, 0.1);
+  border-color: rgba(220, 20, 20, 0.3);
+  color: #ff6b6b;
+}
+
+
+/* =====================================================
+   MOBILE PEQUENO
+===================================================== */
+
+@media (max-width: 430px) {
+
+  .drey-logo {
+    font-size: 19px;
+  }
+
+  .drey-nav-actions
+  .drey-btn-primary {
+    padding:
+      9px 12px;
+
+    font-size: 11px;
+  }
+
+  .drey-nav-links {
+    gap: 15px;
+  }
+
+  .drey-nav-links a {
+    font-size: 11px;
+  }
+
+  .drey-hero {
+    padding:
+      55px 0;
+  }
+
+  .drey-hero h1 {
+    font-size:
+      47px;
+  }
+
+  .drey-hero-stats {
+    gap: 10px;
+  }
+
+  .drey-game-screen {
+    height: 260px;
+  }
+
+  .drey-console-bottom strong {
+    font-size: 12px;
+  }
+
+  .drey-section-header h2 {
+    font-size:
+      36px;
+  }
+
+  .drey-step-card {
+    min-height:
+      280px;
+  }
+
+  .drey-footer-content {
+    grid-template-columns:
+      1fr;
+  }
+
+  .drey-footer-brand {
+    grid-column:
+      auto;
+  }
+}
+
+
+/* =====================================================
+   AUTH FORMS
+===================================================== */
+
+.drey-auth-form {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-cyan);
+  border-radius: var(--radius);
+  padding: 50px 40px;
+  backdrop-filter: blur(10px);
+}
+
+.drey-auth-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.drey-auth-header h1 {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: var(--white);
+}
+
+.drey-auth-header p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.drey-auth-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.drey-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.drey-form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.drey-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--white);
+  font-size: 14px;
+  outline: none;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.drey-input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+}
+
+.drey-input::placeholder {
+  color: var(--muted);
+}
+
+.drey-alert {
+  padding: 15px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.drey-alert-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.drey-divider {
+  margin: 30px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  position: relative;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.drey-divider::before,
+.drey-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.drey-auth-links {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: center;
+}
+
+.drey-link-primary {
+  color: var(--cyan);
+  font-size: 14px;
+  font-weight: 600;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.drey-link-primary:hover {
+  color: var(--cyan-light);
+}
+
+.drey-link-secondary {
+  color: var(--muted);
+  font-size: 13px;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.drey-link-secondary:hover {
+  color: var(--cyan);
+}
+
+
+/* =====================================================
+   STAT CARDS
+===================================================== */
+
+.drey-stat-card {
+  padding: 30px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+
+.drey-stat-card:hover {
+  background: var(--bg-card-2);
+  border-color: var(--border-cyan);
+  box-shadow: var(--glow);
+  transform: translateY(-5px);
+}
+
+
+/* =====================================================
+   GAME CARDS
+===================================================== */
+
+.drey-game-card {
+  display: flex;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: var(--transition);
+  text-decoration: none;
+  color: inherit;
+}
+
+.drey-game-card:hover {
+  background: var(--bg-card-2);
+  border-color: var(--border-cyan);
+  box-shadow: var(--glow);
+  transform: translateY(-8px);
+}
+
+
+/* =====================================================
+   FOOTER LINKS
+===================================================== */
+
+.drey-footer-link {
+  color: var(--muted);
+  font-size: 13px;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.drey-footer-link:hover {
+  color: var(--cyan);
+}
+
+.drey-nav-link {
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.drey-nav-link:hover {
+  color: var(--cyan) !important;
+}
+
+
+/* =====================================================
+   ACESSIBILIDADE
+===================================================== */
+
+a:focus-visible,
+button:focus-visible {
+  outline:
+    2px solid
+    var(--cyan);
+
+  outline-offset: 4px;
+}
+
+
+/* =====================================================
+   REDUZIR ANIMAÇÕES
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration:
+      0.01ms !important;
+
+    animation-iteration-count:
+      1 !important;
+
+    transition-duration:
+      0.01ms !important;
+
+    scroll-behavior:
+      auto !important;
+  }
+
+}
+/* =========================================================
+   DREY CLOUD - LOGIN
+   Design: Dark / Graphite / Cyan
+   Não altera a estrutura do JSX
+   ========================================================= */
+
+/* ---------- VARIÁVEIS ---------- */
+
+:root {
+  --drey-black: #05070a;
+  --drey-dark: #080d12;
+  --drey-card: #0c1218;
+  --drey-card-2: #101820;
+
+  --drey-cyan: #00e5ff;
+  --drey-cyan-light: #35edff;
+  --drey-cyan-dark: #00a8bd;
+
+  --drey-white: #f5f7fa;
+  --drey-gray: #8b98a7;
+  --drey-gray-light: #b7c0ca;
+
+  --drey-border: rgba(255, 255, 255, 0.09);
+  --drey-border-cyan: rgba(0, 229, 255, 0.3);
+
+  --drey-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.55);
+
+  --drey-glow:
+    0 0 35px rgba(0, 229, 255, 0.12);
+
+  --radius: 20px;
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--drey-black);
+  color: var(--drey-white);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+
+/* =========================================================
+   PÁGINA DE LOGIN
+   ========================================================= */
+
+.min-h-screen.flex.items-center.justify-center {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+
+  padding: 60px 20px;
+
+  background:
+    radial-gradient(
+      circle at 50% 20%,
+      rgba(0, 229, 255, 0.09),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(0, 184, 212, 0.05),
+      transparent 30%
+    ),
+    var(--drey-black);
+
+  overflow: hidden;
+}
+
+
+/* ---------- GRID DE FUNDO ---------- */
+
+.min-h-screen.flex.items-center.justify-center::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.018) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.018) 1px,
+      transparent 1px
+    );
+
+  background-size: 45px 45px;
+
+  mask-image: linear-gradient(
+    to bottom,
+    black,
+    transparent 90%
+  );
+
+  pointer-events: none;
+}
+
+
+/* ---------- BRILHO CENTRAL ---------- */
+
+.min-h-screen.flex.items-center.justify-center::after {
+  content: "";
+
+  position: absolute;
+
+  width: 420px;
+  height: 420px;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  background: rgba(0, 229, 255, 0.07);
+
+  filter: blur(120px);
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  animation: loginGlow 6s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
+.w-full.max-w-md {
+  width: 100%;
+  max-width: 430px;
+
+  position: relative;
+  z-index: 2;
+
+  animation: loginEnter 0.8s ease forwards;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.w-full.max-w-md > div:first-child {
+  position: relative;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(18, 27, 36, 0.98),
+      rgba(8, 13, 18, 0.98)
+    );
+
+  border: 1px solid var(--drey-border);
+
+  border-radius: 24px;
+
+  padding: 42px 38px;
+
+  box-shadow:
+    var(--drey-shadow),
+    var(--drey-glow);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  overflow: hidden;
+}
+
+
+/* brilho superior do card */
+
+.w-full.max-w-md > div:first-child::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 10%;
+
+  width: 80%;
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--drey-cyan),
+    transparent
+  );
+
+  opacity: 0.8;
+}
+
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+.inline-block.w-12.h-12 {
+  width: 64px;
+  height: 64px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 20px;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--drey-cyan),
+      var(--drey-cyan-dark)
+    );
+
+  box-shadow:
+    0 0 30px rgba(0, 229, 255, 0.25);
+
+  position: relative;
+
+  animation: logoFloat 4s ease-in-out infinite;
+}
+
+
+/* DC */
+
+.inline-block.w-12.h-12 span {
+  color: #020506;
+
+  font-size: 21px;
+  font-weight: 950;
+
+  letter-spacing: -1px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.text-center.mb-8 {
+  text-align: center;
+
+  margin-bottom: 32px;
+}
+
+.text-center.mb-8 h1 {
+  margin: 0;
+
+  color: var(--drey-white);
+
+  font-size: 32px;
+  line-height: 1.1;
+
+  font-weight: 900;
+
+  letter-spacing: -1.5px;
+}
+
+.text-center.mb-8 p {
+  margin-top: 10px;
+
+  color: var(--drey-gray);
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+
+/* ---------- LABEL ---------- */
+
+form label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: var(--drey-gray-light);
+
+  font-size: 13px;
+  font-weight: 650;
+
+  letter-spacing: 0.2px;
+}
+
+
+/* ---------- INPUT ---------- */
+
+form input {
+  width: 100%;
+
+  height: 52px;
+
+  padding: 0 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.11);
+
+  border-radius: 12px;
+
+  outline: none;
+
+  background:
+    rgba(255, 255, 255, 0.035);
+
+  color: var(--drey-white);
+
+  font-size: 15px;
+
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+/* placeholder */
+
+form input::placeholder {
+  color: #5e6a77;
+}
+
+
+/* foco */
+
+form input:focus {
+  border-color: var(--drey-cyan);
+
+  background:
+    rgba(0, 229, 255, 0.035);
+
+  box-shadow:
+    0 0 0 4px rgba(0, 229, 255, 0.08),
+    0 0 25px rgba(0, 229, 255, 0.08);
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   BOTÃO ENTRAR
+   ========================================================= */
+
+form button {
+  width: 100%;
+
+  height: 54px;
+
+  margin-top: 4px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--drey-cyan),
+      #00b8d4
+    );
+
+  color: #020506;
+
+  font-size: 15px;
+  font-weight: 850;
+
+  cursor: pointer;
+
+  position: relative;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 10px 30px rgba(0, 229, 255, 0.16);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    filter 0.25s ease;
+}
+
+
+/* brilho passando */
+
+form button::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: -120%;
+
+  width: 70%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.35),
+      transparent
+    );
+
+  transform: skewX(-20deg);
+
+  transition: left 0.6s ease;
+}
+
+
+form button:hover::before {
+  left: 140%;
+}
+
+
+form button:hover {
+  transform: translateY(-2px);
+
+  filter: brightness(1.08);
+
+  box-shadow:
+    0 15px 40px rgba(0, 229, 255, 0.25);
+}
+
+
+form button:active {
+  transform: translateY(0);
+}
+
+
+form button:disabled {
+  opacity: 0.55;
+
+  cursor: not-allowed;
+
+  transform: none;
+
+  box-shadow: none;
+}
+
+
+/* =========================================================
+   DIVISOR "OU"
+   ========================================================= */
+
+.my-6.flex.items-center {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin: 26px 0;
+}
+
+
+.my-6.flex.items-center > div {
+  flex: 1;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1)
+    );
+}
+
+
+.my-6.flex.items-center > div:last-child {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+}
+
+
+.my-6.flex.items-center span {
+  color: #64717e;
+
+  font-size: 12px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1px;
+}
+
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+.text-center.space-y-3 {
+  text-align: center;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+
+.text-center.space-y-3 a {
+  text-decoration: none;
+
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+
+.text-center.space-y-3 a:first-child {
+  color: var(--drey-cyan);
+
+  font-size: 14px;
+  font-weight: 650;
+}
+
+
+.text-center.space-y-3 a:first-child:hover {
+  color: var(--drey-cyan-light);
+
+  text-decoration: underline;
+}
+
+
+.text-center.space-y-3 a:last-child {
+  color: #697582;
+
+  font-size: 13px;
+}
+
+
+.text-center.space-y-3 a:last-child:hover {
+  color: var(--drey-cyan);
+}
+
+
+/* =========================================================
+   ERRO
+   ========================================================= */
+
+.mb-4.p-4 {
+  margin-bottom: 20px;
+
+  padding: 14px 16px;
+
+  border: 1px solid rgba(255, 70, 70, 0.25);
+
+  border-radius: 12px;
+
+  background: rgba(255, 50, 50, 0.07);
+
+  color: #ff8585;
+
+  font-size: 13px;
+
+  animation: errorShake 0.35s ease;
+}
+
+
+/* =========================================================
+   FOOTER DO LOGIN
+   ========================================================= */
+
+.w-full.max-w-md > p {
+  margin: 22px 0 0;
+
+  text-align: center;
+
+  color: #56616d;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   ANIMAÇÕES
+   ========================================================= */
+
+@keyframes loginEnter {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(25px)
+      scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+@keyframes loginGlow {
+  0%,
+  100% {
+    opacity: 0.55;
+
+    transform:
+      translate(-50%, -50%)
+      scale(1);
+  }
+
+  50% {
+    opacity: 0.9;
+
+    transform:
+      translate(-50%, -50%)
+      scale(1.15);
+  }
+}
+
+
+@keyframes logoFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+
+@keyframes errorShake {
+  0% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  50% {
+    transform: translateX(5px);
+  }
+
+  75% {
+    transform: translateX(-3px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .min-h-screen.flex.items-center.justify-center {
+    padding: 30px 16px;
+  }
+
+  .w-full.max-w-md > div:first-child {
+    padding: 32px 22px;
+
+    border-radius: 20px;
+  }
+
+  .text-center.mb-8 h1 {
+    font-size: 28px;
+  }
+
+  .inline-block.w-12.h-12 {
+    width: 58px;
+    height: 58px;
+  }
+
+  form {
+    gap: 17px;
+  }
+
+  form input {
+    height: 50px;
+  }
+
+  form button {
+    height: 52px;
+  }
+}
+
+
+/* =========================================================
+   TELAS MUITO PEQUENAS
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+  .w-full.max-w-md > div:first-child {
+    padding: 28px 18px;
+  }
+
+  .text-center.mb-8 h1 {
+    font-size: 25px;
+  }
+}
+
+
+/* =========================================================
+   ACESSIBILIDADE
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+
+    animation-iteration-count: 1 !important;
+
+    transition-duration: 0.01ms !important;
+  }
+}

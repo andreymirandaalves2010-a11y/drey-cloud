@@ -1,0 +1,158 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    FLUXO DE LANÇAMENTO DE JOGO                              ║
+║                     com HUD Responsivo (Mobile/Desktop)                      ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+1️⃣ USUÁRIO CLICA EM "JOGAR"
+   └─ Frontend: LaunchButton.handleLaunchGame()
+      │
+      ├─ Extrai gameId de: game.slug || game.gameId || game.name
+      ├─ Normaliza: "Fortnite" → "fortnite"
+      └─ Envia POST para backend: /api/games/launch
+
+
+2️⃣ BACKEND RECEBE REQUISIÇÃO
+   └─ gamesController.launchGame()
+      │
+      ├─ Carrega jogos de: games/executables/
+      │  └─ Cada pasta/shortcut = 1 jogo
+      │
+      ├─ Busca Case-Insensitive
+      │  └─ "fortnite" == "Fortnite" ✅
+      │
+      ├─ Busca Fuzzy (aproximada)
+      │  └─ "fort" match com "fortnite" ✅
+      │
+      ├─ Se não encontrar
+      │  └─ Retorna: {success: false, available: ["minecraft", ...]}
+      │
+      └─ Se encontrar
+         ├─ Valida permissões/arquivo
+         ├─ spawn(app.path) → Executa em novo processo
+         └─ Retorna: {success: true, message: "Fortnite launched"}
+
+
+3️⃣ FRONTEND RECEBE RESPOSTA
+   └─ LaunchButton.js
+      │
+      ├─ Se success === true
+      │  ├─ Mostra: "✅ Fortnite launched successfully"
+      │  ├─ Timeout: 5 segundos
+      │  └─ Estado: setIsLaunching(false)
+      │
+      └─ Se success === false
+         ├─ Mostra: "❌ Game not found: fortnite"
+         ├─ Exibe sugestões
+         └─ Estado: setIsLaunching(false)
+
+
+4️⃣ RENDERIZAÇÃO DO HUD (Se gameRunning)
+   
+   DESKTOP (Controle Xbox)
+   └─ GamepadHUD.js
+      ├─ D-PAD (esquerda inferior)
+      ├─ Botões ABXY (direita inferior)  
+      ├─ Triggers LT/RT (topo)
+      ├─ Sticks analógicos
+      └─ Press BACK+START para ocultar
+
+
+   MOBILE/TOUCH (Celular ou tela <768px)
+   └─ GamepadHUDMobile.js
+      ├─ Detecta automaticamente via userAgent
+      ├─ D-PAD (toque inferior esquerdo)
+      ├─ Botões ABXY (toque inferior direito)
+      ├─ Triggers (toque topo)
+      └─ Duplo-clique centro para ocultar
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                              ESTRUTURA DE PASTAS                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+games/
+└─ executables/
+   ├─ Fortnite/
+   │  └─ FortniteGame.exe (ou em subcaminho: Fortnite/Engine/Binaries/...)
+   ├─ Minecraft/
+   │  └─ javaw.exe
+   ├─ Valorant.lnk (shortcut)
+   └─ GameName.zip (não suportado, precisa extrair)
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                           LOGS DE EXEMPLO                                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+SUCESSO:
+--------
+[Backend]
+🎮 Launch request for: fortnite
+✅ Launching: Fortnite  
+📂 Path: C:\Users\andre\Documents\CLOUD-GAME\games\executables\Fortnite\FortniteGame.exe
+
+[Frontend Console]
+Tentando iniciar: fortnite via http://localhost:3001
+Resposta do servidor: {success: true, message: "Fortnite launched successfully"}
+✅ Jogo iniciado com sucesso!
+
+
+ERRO - JOGO NÃO ENCONTRADO:
+---------------------------
+[Backend]
+🎮 Launch request for: fortnite
+❌ Game not found: fortnite
+Available games: minecraft, valorant
+
+[Frontend Console]
+Tentando iniciar: fortnite via http://localhost:3001
+Resposta do servidor: {
+  success: false,
+  message: "Game not found: fortnite",
+  available: ["minecraft", "valorant"],
+  suggestion: "Check if game folder exists in games/executables/"
+}
+❌ Erro ao iniciar: Game not found: fortnite
+
+
+ERRO - SPAWN FALHA:
+-------------------
+[Backend]
+✅ Launching: Fortnite
+❌ Spawn error: ENOENT - arquivo não existe
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          CHECKLIST DE SETUP                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+□ Pasta games/executables/ criada
+□ Pelo menos 1 jogo/shortcut dentro
+□ Backend iniciado (npm run dev)
+□ Frontend iniciado (npm run dev)
+□ Acessar http://localhost:3000/games
+□ Clicar em um jogo
+□ Clicar em "Clique para Jogar"
+□ Verificar logs (backend + DevTools)
+□ Jogo deve abrir em novo processo
+□ HUD aparece (desktop) ou touch-buttons (mobile)
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                              PRÓXIMOS PASSOS                                 ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+1. [IMPORTANTE] Integrar WebSocket para enviar input do HUD → Jogo
+   └─ Atualmente HUD apenas visualiza, não controla
+
+2. Adicionar streaming de vídeo (Warp Engine ou OBS)
+   └─ Transmitir tela do jogo para o cliente
+
+3. Populr banco de dados com metadados reais
+   └─ Screenshots, descrição, rating, tags
+
+4. Cache de lista de jogos (frontend)
+   └─ Reduzir chamadas API
+
+5. Suporte a múltiplos formatos (ZIP, executável direto, etc.)
+   └─ Descompactar automaticamente se necessário

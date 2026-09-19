@@ -1,0 +1,226 @@
+﻿const { pool } = require('../db');
+const { spawn, execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+
+function resolveShortcut(shortcutPath) {
+  try {
+    const escapedPath = shortcutPath.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    const vbs = `Set s=CreateObject("WScript.Shell").CreateShortcut("${escapedPath}"):WScript.Echo s.TargetPath`;
+    const tmp = path.join(os.tmpdir(), `s${Date.now()}.vbs`);
+    fs.writeFileSync(tmp, vbs);
+    const out = execSync(`cscript "${tmp}"`, { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'ignore'] }).trim();
+    try { fs.unlinkSync(tmp); } catch (e) {}
+    return out || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function findExecutableInFolder(folderPath) {
+  try {
+    const files = fs.readdirSync(folderPath);
+    
+    // Procura por executáveis conhecidos
+    const execNames = ['FortniteGame.exe', 'FortniteLauncher.exe', 'game.exe', 'launcher.exe', 'setup.exe'];
+    for (const execName of execNames) {
+      const execPath = path.join(folderPath, execName);
+      if (fs.existsSync(execPath)) {
+        console.log(`    ✅ Found executable: ${execName}`);
+        return execPath;
+      }
+    }
+    
+    // Procura em subpastas (até 2 níveis)
+    for (const file of files) {
+      const filePath = path.join(folderPath, file);
+      const stat = fs.statSync(filePath);
+      
+      if (stat.isDirectory() && !file.startsWith('.')) {
+        // Procura executáveis na subpasta
+        const subFiles = fs.readdirSync(filePath);
+        for (const subFile of subFiles) {
+          if (subFile.endsWith('.exe')) {
+            const exePath = path.join(filePath, subFile);
+            console.log(`    ✅ Found in subfolder: ${file}/${subFile}`);
+            return exePath;
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.log(`    ⚠️ Error searching for executable: ${e.message}`);
+  }
+  return null;
+}
+
+function loadGamesFromFolder() {
+  const gamesFolder = path.join(__dirname, '../../../games/executables');
+  const apps = {};
+  try {
+    console.log(`\n📂 Loading games from: ${gamesFolder}`);
+    if (!fs.existsSync(gamesFolder)) {
+      console.log('❌ Folder does not exist');
+      return apps;
+    }
+    const files = fs.readdirSync(gamesFolder);
+    console.log(`📁 Items found: ${files.join(', ')}`);
+    
+    files.forEach(file => {
+      if (file === '.gitkeep' || file.startsWith('.')) return;
+      const filePath = path.join(gamesFolder, file);
+      const stat = fs.statSync(filePath);
+      let targetPath = null;
+      const displayName = file;
+      console.log(`\n🔍 Processing: ${file}`);
+      
+      // Se é uma PASTA (jogo como Fortnite)
+      if (stat.isDirectory()) {
+        console.log(`  📁 Is folder, searching for executable...`);
+        const exePath = findExecutableInFolder(filePath);
+        if (exePath) {
+          targetPath = exePath;
+          console.log(`  ✅ Game folder detected`);
+        } else {
+          console.log(`  ⚠️ No executable found in folder`);
+          return;
+        }
+      }
+      // Se é um SHORTCUT (.lnk)
+      else if (file.endsWith('.lnk')) {
+        console.log(`  🔗 Is shortcut, resolving...`);
+        const resolved = resolveShortcut(filePath);
+        console.log(`  ✔️ Resolved to: ${resolved}`);
+        if (resolved && fs.existsSync(resolved)) {
+          targetPath = resolved;
+          console.log(`  ✅ Valid shortcut found`);
+        } else {
+          console.log(`  ⚠️ Using shortcut file directly`);
+          targetPath = filePath;
+        }
+      }
+      // Se é um EXECUTÁVEL direto (.exe)
+      else if (file.endsWith('.exe')) {
+        console.log(`  🎮 Is executable file`);
+        targetPath = filePath;
+        console.log(`  ✅ Executable detected`);
+      } else {
+        console.log(`  ⏭️ Skipping: not a game (folder/shortcut/exe)`);
+        return;
+      }
+      
+      if (targetPath) {
+        const gameId = displayName.toLowerCase().replace(/\s+/g, '-');
+        apps[gameId] = { 
+          path: targetPath, 
+          name: displayName, 
+          original: file, 
+          isShortcut: file.endsWith('.lnk'),
+          isFolder: stat.isDirectory()
+        };
+        console.log(`  📦 Registered as: ${gameId}`);
+      }
+    });
+    console.log(`\n✅ Games loaded: ${Object.keys(apps).length > 0 ? Object.keys(apps).join(', ') : 'NENHUM'}\n`);
+  } catch (error) {
+    console.error('Error loading games:', error.message);
+  }
+  return apps;
+}
+
+const gamesController = {
+  launchGame: async (req, res) => {
+    try {
+      const { gameId } = req.body;
+      if (!gameId) return res.status(400).json({ success: false, message: 'gameId required' });
+      const apps = loadGamesFromFolder();
+      const app = apps[gameId];
+      if (!app) {
+        return res.status(404).json({ success: false, message: `Game not found: ${gameId}`, available: Object.keys(apps) });
+      }
+      console.log(`Launching: ${app.name}`);
+      spawn(app.path, [], { detached: true, stdio: 'ignore', shell: true }).unref();
+      res.json({ success: true, message: `${app.name} launched` });
+    } catch (error) {
+      console.error('Launch error:', error);
+      res.status(500).json({ success: false, message: 'Failed to launch' });
+    }
+  },
+
+  getAllGames: async (req, res) => {
+    try {
+      const conn = await pool.getConnection();
+      const [games] = await conn.query('SELECT id, name, slug, description, cover, banner, status, created_at FROM games');
+      await conn.release();
+      res.json(games);
+    } catch (error) {
+      console.error('Get games error:', error);
+      res.status(500).json({ error: 'Failed to fetch games' });
+    }
+  },
+
+  getGameById: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const conn = await pool.getConnection();
+      const [games] = await conn.query('SELECT * FROM games WHERE id = ?', [id]);
+      await conn.release();
+      if (!games.length) return res.status(404).json({ error: 'Game not found' });
+      res.json(games[0]);
+    } catch (error) {
+      console.error('Get game error:', error);
+      res.status(500).json({ error: 'Failed to fetch game' });
+    }
+  },
+
+  createGame: async (req, res) => {
+    try {
+      const { name, slug, description, cover, banner, status } = req.body;
+      if (!name || !slug) return res.status(400).json({ error: 'Name and slug required' });
+      const conn = await pool.getConnection();
+      const [result] = await conn.query(
+        'INSERT INTO games (name, slug, description, cover, banner, status, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())',
+        [name, slug, description, cover, banner, status || 'available']
+      );
+      await conn.release();
+      res.status(201).json({ message: 'Game created', id: result.insertId });
+    } catch (error) {
+      console.error('Create game error:', error);
+      res.status(500).json({ error: 'Failed to create game' });
+    }
+  },
+
+  updateGame: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { name, description, cover, banner, status } = req.body;
+      const conn = await pool.getConnection();
+      await conn.query(
+        'UPDATE games SET name = ?, description = ?, cover = ?, banner = ?, status = ? WHERE id = ?',
+        [name, description, cover, banner, status, id]
+      );
+      await conn.release();
+      res.json({ message: 'Game updated' });
+    } catch (error) {
+      console.error('Update game error:', error);
+      res.status(500).json({ error: 'Failed to update game' });
+    }
+  },
+
+  deleteGame: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const conn = await pool.getConnection();
+      await conn.query('DELETE FROM games WHERE id = ?', [id]);
+      await conn.release();
+      res.json({ message: 'Game deleted' });
+    } catch (error) {
+      console.error('Delete game error:', error);
+      res.status(500).json({ error: 'Failed to delete game' });
+    }
+  }
+};
+
+module.exports = gamesController;
+
