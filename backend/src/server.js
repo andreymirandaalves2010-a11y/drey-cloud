@@ -6,12 +6,12 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 const { pool, testDatabase } = require("./db");
-const authRoutes = require("./routes/auth.routes");9
+const authRoutes = require("./routes/auth.routes");
 const gamesRoutes = require("./routes/games.routes");
 
 const app = express();
-const PORT = process.env.PORT || 3001;
 
+const PORT = process.env.PORT || 3001;
 
 // ================================
 // MIDDLEWARE
@@ -19,10 +19,31 @@ const PORT = process.env.PORT || 3001;
 
 app.use(helmet());
 
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:3000"
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
-    credentials: true
+    origin: function (origin, callback) {
+      // Permite requisições sem Origin
+      // (ex.: testes diretos no navegador/curl)
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      console.log("CORS bloqueou:", origin);
+
+      return callback(new Error("Origin não permitida pelo CORS"));
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
 
@@ -36,7 +57,6 @@ app.use(
 
 app.use(cookieParser());
 
-
 // ================================
 // HOME
 // ================================
@@ -44,10 +64,9 @@ app.use(cookieParser());
 app.get("/", (req, res) => {
   res.json({
     success: true,
-    message: "Drey Cloud API online 🚀"
+    message: "Drey Cloud API online"
   });
 });
-
 
 // ================================
 // HEALTH
@@ -62,9 +81,8 @@ app.get("/api/health", async (req, res) => {
       api: "online",
       database: "online"
     });
-
   } catch (error) {
-    console.error(error);
+    console.error("Erro no MySQL:", error.message);
 
     res.status(500).json({
       success: false,
@@ -73,7 +91,6 @@ app.get("/api/health", async (req, res) => {
     });
   }
 });
-
 
 // ================================
 // AUTENTICAÇÃO
@@ -87,7 +104,6 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/games", gamesRoutes);
 
-
 // ================================
 // 404
 // ================================
@@ -99,21 +115,32 @@ app.use((req, res) => {
   });
 });
 
+// ================================
+// ERROS
+// ================================
+
+app.use((err, req, res, next) => {
+  console.error("Erro:", err.message);
+
+  res.status(500).json({
+    success: false,
+    message:
+      process.env.NODE_ENV === "development"
+        ? err.message
+        : "Erro interno do servidor."
+  });
+});
 
 // ================================
 // SERVIDOR
 // ================================
 
-app.listen(PORT, async () => {
-  console.log("");
+app.listen(PORT, "0.0.0.0", () => {
   console.log("====================================");
   console.log("          DREY CLOUD API");
   console.log("====================================");
-  console.log(`🚀 API: http://localhost:${PORT}`);
-  console.log(`❤️ Health: http://localhost:${PORT}/api/health`);
-  console.log(`👤 User: http://localhost:${PORT}/api/auth/me`);
+  console.log(`🚀 API rodando na porta ${PORT}`);
   console.log("====================================");
-  console.log("");
 
-  await testDatabase();
+  testDatabase();
 });

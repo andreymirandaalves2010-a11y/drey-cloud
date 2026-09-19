@@ -55,3 +55,5 @@ agent/logs/
 secrets.json
 
 games/executables/
+.vercel
+.env*
